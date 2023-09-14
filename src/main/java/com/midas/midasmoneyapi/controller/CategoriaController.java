@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -20,11 +22,17 @@ public class CategoriaController {
         return catRepo.findAll();
     }
     @PostMapping
-    public ResponseEntity<?> cadastrar(@RequestBody Categoria cat, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<?> cadastrar(@RequestBody @Valid Categoria cat, UriComponentsBuilder uriBuilder){
         Categoria c = catRepo.save(cat);
         URI uri = uriBuilder.path("/categorias/{id}")
                 .buildAndExpand(c.getId())
                 .toUri();
-        return ResponseEntity.created(uri).build();
+
+        return ResponseEntity.created(uri).body(c);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscarCategoria(@PathVariable Long id){
+       return null;
     }
 }
