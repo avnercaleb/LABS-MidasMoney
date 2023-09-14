@@ -3,10 +3,11 @@ package com.midas.midasmoneyapi.controller;
 import com.midas.midasmoneyapi.model.Categoria;
 import com.midas.midasmoneyapi.repository.CategoriaRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,5 +18,13 @@ public class CategoriaController {
     @GetMapping
     public List<Categoria> listar(){
         return catRepo.findAll();
+    }
+    @PostMapping
+    public ResponseEntity<?> cadastrar(@RequestBody Categoria cat, UriComponentsBuilder uriBuilder){
+        Categoria c = catRepo.save(cat);
+        URI uri = uriBuilder.path("/categorias/{id}")
+                .buildAndExpand(c.getId())
+                .toUri();
+        return ResponseEntity.created(uri).build();
     }
 }
