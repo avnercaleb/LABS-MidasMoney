@@ -1,15 +1,16 @@
 package com.midas.midasmoneyapi.controller;
 
+import com.midas.midasmoneyapi.eventos.EventoRecursoCriado;
 import com.midas.midasmoneyapi.model.Categoria;
 import com.midas.midasmoneyapi.repository.CategoriaRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,18 +18,18 @@ import java.util.List;
 public class CategoriaController {
     @Autowired
     private CategoriaRepo catRepo;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
     @GetMapping
     public List<Categoria> listar(){
         return catRepo.findAll();
     }
     @PostMapping
-    public ResponseEntity<?> cadastrar(@RequestBody @Valid Categoria cat, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<?> cadastrar(@RequestBody @Valid Categoria cat, HttpServletResponse response){
         Categoria c = catRepo.save(cat);
-        URI uri = uriBuilder.path("/categorias/{id}")
-                .buildAndExpand(c.getId())
-                .toUri();
+        eventPublisher.publishEvent(new EventoRecursoCriado(this, response, c.getId()));
 
-        return ResponseEntity.created(uri).body(c);
+        return ResponseEntity.status(HttpStatus.CREATED).body(c);
     }
 
     @GetMapping("/{id}")
