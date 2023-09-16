@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +33,11 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         String mensagemUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
         String mensagemDev = ex.getCause().toString();
         List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDev));
-        return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
+        TesteBody body = TesteBody.builder()
+                .desc(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
     }
 
     @Override
@@ -40,7 +45,11 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpStatus status, WebRequest request) {
 
         List<Erro> erros = errosList(ex.getBindingResult());
-        return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
+        TesteBody body = TesteBody.builder()
+                .desc(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
     }
     @ExceptionHandler({EmptyResultDataAccessException.class, NoSuchElementException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)

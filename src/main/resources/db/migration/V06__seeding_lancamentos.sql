@@ -1,0 +1,6 @@
+INSERT INTO lancamentos (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, id_categoria, id_pessoa) VALUES ('Salario Mensal', '2023-10-01', null, 4200.00, 'Pagamento de Salario', 'RECEITA', 1, 1);
+INSERT INTO lancamentos (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, id_categoria, id_pessoa) VALUES ('Cartão de Credito', '2023-10-01', '2023-10-10', 1200.00, 'Pagamento de fatura', 'DESPESA', 5, 1);
+INSERT INTO lancamentos (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, id_categoria, id_pessoa) VALUES ('Compras Mensais', '2023-10-05', '2023-10-05', 800.00, 'Mercado Mensal', 'DESPESA', 3, 2);
+INSERT INTO lancamentos (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, id_categoria, id_pessoa) VALUES ('Faculdade', '2023-10-10', '2023-10-05', 220.00, 'Pagamento de Mensalidade', 'DESPESA', 5, 1);
+INSERT INTO lancamentos (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, id_categoria, id_pessoa) VALUES ('Ticket Alimentação', '2023-10-01', null, 1200.00, 'Deposito de Ticket', 'RECEITA', 5, 1);
+INSERT INTO lancamentos (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, id_categoria, id_pessoa) VALUES ('Seguro Carro', '2023-10-10', '2023-10-01', 120.00, 'Pagamento de Seguro', 'DESPESA', 5, 1);
