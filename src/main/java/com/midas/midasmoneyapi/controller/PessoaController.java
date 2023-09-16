@@ -3,6 +3,7 @@ package com.midas.midasmoneyapi.controller;
 import com.midas.midasmoneyapi.eventos.EventoRecursoCriado;
 import com.midas.midasmoneyapi.model.Pessoa;
 import com.midas.midasmoneyapi.repository.PessoaRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -46,5 +47,12 @@ public class PessoaController {
     public ResponseEntity deletarPessoa(@PathVariable Long id){
         pessoaRepo.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Pessoa> atualizar(@PathVariable @Valid Long id, @RequestBody @Valid Pessoa pessoa){
+        Pessoa p = pessoaRepo.findById(id).get();
+        BeanUtils.copyProperties(pessoa, p, "id");
+        return ResponseEntity.ok().body(pessoaRepo.save(p));
     }
 }
