@@ -8,11 +8,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -36,5 +34,17 @@ public class PessoaController {
         eventPublisher.publishEvent(new EventoRecursoCriado(this, response, p.getId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(p);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Pessoa> buscarPessoa(@PathVariable @Valid Long id){
+        Pessoa p = pessoaRepo.findById(id).get();
+        return ResponseEntity.ok(p);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deletarPessoa(@PathVariable Long id){
+        pessoaRepo.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

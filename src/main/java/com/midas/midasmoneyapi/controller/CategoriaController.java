@@ -33,7 +33,8 @@ public class CategoriaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarCategoria(@PathVariable Long id){
-       return null;
+    public ResponseEntity<Categoria> buscarCategoria(@PathVariable @Valid Long id){
+        Categoria c = catRepo.findById(id).get();
+        return ResponseEntity.ok(c);
     }
 }
