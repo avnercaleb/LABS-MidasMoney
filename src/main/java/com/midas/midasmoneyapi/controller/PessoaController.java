@@ -3,6 +3,7 @@ package com.midas.midasmoneyapi.controller;
 import com.midas.midasmoneyapi.eventos.EventoRecursoCriado;
 import com.midas.midasmoneyapi.model.Pessoa;
 import com.midas.midasmoneyapi.repository.PessoaRepository;
+import com.midas.midasmoneyapi.service.PessoaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -19,9 +20,10 @@ import java.util.List;
 public class PessoaController {
     @Autowired
     private PessoaRepository pessoaRepo;
-
     @Autowired
     private ApplicationEventPublisher eventPublisher;
+    @Autowired
+    private PessoaService service;
 
     @GetMapping
     public ResponseEntity<List<Pessoa>> listar(){
@@ -54,5 +56,11 @@ public class PessoaController {
         Pessoa p = pessoaRepo.findById(id).get();
         BeanUtils.copyProperties(pessoa, p, "id");
         return ResponseEntity.ok().body(pessoaRepo.save(p));
+    }
+
+    @PutMapping("/{id}/status")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void definirStatusPessoa(@PathVariable @Valid Long id, @RequestBody Boolean status){
+        service.definirStatusPessoa(id, status);
     }
 }
