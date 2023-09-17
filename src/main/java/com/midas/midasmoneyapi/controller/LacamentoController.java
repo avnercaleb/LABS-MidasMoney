@@ -4,6 +4,7 @@ import com.midas.midasmoneyapi.eventos.EventoRecursoCriado;
 import com.midas.midasmoneyapi.model.Lancamento;
 import com.midas.midasmoneyapi.repository.LancamentoFilter;
 import com.midas.midasmoneyapi.repository.LancamentoRepository;
+import com.midas.midasmoneyapi.service.LancamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,8 @@ public class LacamentoController {
     private LancamentoRepository repo;
     @Autowired
     private ApplicationEventPublisher eventPublisher;
+    @Autowired
+    private LancamentoService service;
 
     @GetMapping
     public ResponseEntity<Page<Lancamento>> pesquisar(LancamentoFilter filter, Pageable page) {
@@ -36,7 +39,7 @@ public class LacamentoController {
     @PostMapping
     public ResponseEntity<Lancamento> cadastrar(@RequestBody @Valid Lancamento lancamento, HttpServletResponse response){
         Lancamento l = lancamento;
-        repo.save(l);
+        service.cadastrar(l);
         eventPublisher.publishEvent(new EventoRecursoCriado(this, response, l.getId()));
         return ResponseEntity.status(HttpStatus.CREATED).body(l);
     }

@@ -74,6 +74,17 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
+
+    @ExceptionHandler({UsuarioInativoException.class})
+    public ResponseEntity<Object> handleUsuarioInativoException(UsuarioInativoException ex, WebRequest request){
+        ExceptionBody body = ExceptionBody.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.toString())
+                .error(ex.toString())
+                .build();
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
     private List<Erro> errosList(BindingResult bindingResult){
         List<Erro> erros = new ArrayList<>();
 
