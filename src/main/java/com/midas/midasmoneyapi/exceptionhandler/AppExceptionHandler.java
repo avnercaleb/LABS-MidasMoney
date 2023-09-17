@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,9 +34,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         String mensagemUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
         String mensagemDev = ex.getCause().toString();
         List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDev));
-        TesteBody body = TesteBody.builder()
-                .desc("Teste")
+        ExceptionBody body = ExceptionBody.builder()
                 .timestamp(LocalDateTime.now())
+                .status(status.toString())
+                .error(ex.getMessage())
                 .build();
         return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
     }
@@ -45,18 +47,33 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpStatus status, WebRequest request) {
 
         List<Erro> erros = errosList(ex.getBindingResult());
-        TesteBody body = TesteBody.builder()
-                .desc("Teste")
+        ExceptionBody body = ExceptionBody.builder()
                 .timestamp(LocalDateTime.now())
+                .status(status.toString())
+                .error(ex.getMessage())
                 .build();
         return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
     }
     @ExceptionHandler({EmptyResultDataAccessException.class, NoSuchElementException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handleEmptyResultDataAccessException(RuntimeException ex){
-
+    public ResponseEntity<Object> handleEmptyResultDataAccessException(RuntimeException ex, WebRequest request){
+        ExceptionBody body = ExceptionBody.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.toString())
+                .error(ex.toString())
+                .build();
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
+    @ExceptionHandler({SQLIntegrityConstraintViolationException.class})
+    public ResponseEntity<Object> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException ex, WebRequest request){
+        ExceptionBody body = ExceptionBody.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.toString())
+                .error(ex.toString())
+                .build();
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
     private List<Erro> errosList(BindingResult bindingResult){
         List<Erro> erros = new ArrayList<>();
 

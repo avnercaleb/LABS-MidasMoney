@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -38,6 +38,6 @@ public class LacamentoController {
         Lancamento l = lancamento;
         repo.save(l);
         eventPublisher.publishEvent(new EventoRecursoCriado(this, response, l.getId()));
-        return ResponseEntity.ok(l);
+        return ResponseEntity.status(HttpStatus.CREATED).body(l);
     }
 }

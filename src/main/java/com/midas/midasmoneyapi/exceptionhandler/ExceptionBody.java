@@ -7,9 +7,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 @Data
 @Builder
-public class TesteBody {
+public class ExceptionBody {
 
-    private String desc;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
+
+    private String status;
+
+    private String error;
 }
