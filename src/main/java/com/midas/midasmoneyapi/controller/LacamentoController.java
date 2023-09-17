@@ -43,4 +43,10 @@ public class LacamentoController {
         eventPublisher.publishEvent(new EventoRecursoCriado(this, response, l.getId()));
         return ResponseEntity.status(HttpStatus.CREATED).body(l);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Lancamento> excluir(@PathVariable @Valid Long id){
+        repo.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
