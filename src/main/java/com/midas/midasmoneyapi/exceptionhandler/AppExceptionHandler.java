@@ -34,7 +34,7 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         String mensagemDev = ex.getCause().toString();
         List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDev));
         TesteBody body = TesteBody.builder()
-                .desc(ex.getMessage())
+                .desc("Teste")
                 .timestamp(LocalDateTime.now())
                 .build();
         return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
@@ -46,7 +46,7 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
         List<Erro> erros = errosList(ex.getBindingResult());
         TesteBody body = TesteBody.builder()
-                .desc(ex.getMessage())
+                .desc("Teste")
                 .timestamp(LocalDateTime.now())
                 .build();
         return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
