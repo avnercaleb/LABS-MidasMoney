@@ -1,6 +1,7 @@
 package com.midas.midasmoneyapi.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +19,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @EnableAuthorizationServer
 @RequiredArgsConstructor
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
-
+    @Autowired
     private AuthenticationManager manager;
 
     @Override
@@ -27,8 +28,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .withClient("angular")
                 .secret(passwordEncoder().encode("secret"))
                 .scopes("read", "write")
-                .authorizedGrantTypes("client_credentials")
-                .accessTokenValiditySeconds(1800);
+                .authorizedGrantTypes("password", "refresh_token")
+                .accessTokenValiditySeconds(1800)
+                .refreshTokenValiditySeconds(3600*24);
     }
 
     @Override
@@ -36,6 +38,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints
                 .tokenStore(tokenStore())
                 .accessTokenConverter(accessTokenConverter())
+                .reuseRefreshTokens(false)
                 .authenticationManager(manager);
     }
     @Bean
