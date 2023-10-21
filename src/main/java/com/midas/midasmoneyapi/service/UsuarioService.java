@@ -1,5 +1,6 @@
 package com.midas.midasmoneyapi.service;
 
+import com.midas.midasmoneyapi.exceptionhandler.UsuarioNaoEncontradoException;
 import com.midas.midasmoneyapi.model.Usuario;
 import com.midas.midasmoneyapi.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +19,10 @@ public class UsuarioService {
 
     public List<Usuario> listarUsuarios() {
         return repo.findAll();
+    }
+
+    public Usuario login(String email) {
+        return repo.findByEmail(email)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuario não encontrado"));
     }
 }
