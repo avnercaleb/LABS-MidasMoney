@@ -1,0 +1,1 @@
+ALTER TABLE usuario MODIFY senha varchar(100);

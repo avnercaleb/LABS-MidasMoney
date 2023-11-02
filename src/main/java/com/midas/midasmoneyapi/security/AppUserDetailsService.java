@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -25,7 +26,7 @@ public class AppUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         Usuario usuario = repo.findByEmail(email)
-                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuario não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuario não existe"));
 
         return new User(email, usuario.getSenha(), getPermissoes(usuario));
     }
